@@ -8,10 +8,10 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow both localhost (dev) and Vercel (prod)
+// CORS configuration
 const allowedOrigins = [
-  'http://localhost:5173',                          // local dev
-  'https://issue-tracker-nine-zeta.vercel.app'       // replace with your actual Vercel URL
+  'http://localhost:5173', // Local development
+  'https://issue-tracker-crud-frontend-79n6.vercel.app' // Production frontend URL
 ];
 
 app.use(cors({
