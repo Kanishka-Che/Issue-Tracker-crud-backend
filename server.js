@@ -7,14 +7,30 @@ import express from 'express';
 dotenv.config();
 
 const app = express();
+
+// ✅ Allow both localhost (dev) and Vercel (prod)
+const allowedOrigins = [
+  'http://localhost:5173',                          // local dev
+  'https://issue-tracker-nine-zeta.vercel.app'       // replace with your actual Vercel URL
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173/'
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
+
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {console.log("MongoDB connected")})
-  .catch((err) => {console.log("Database connection failed:" ,err.message)});
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log("Database connection failed:", err.message));
 
 app.use('/api/issues', issueRoutes);
 
